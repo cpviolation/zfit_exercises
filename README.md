@@ -13,4 +13,3 @@ python3 -m pip install --upgrade pip
 pip install git+https://github.com/zfit/zfit
 pip install -r requirements.txt
 ```
-
