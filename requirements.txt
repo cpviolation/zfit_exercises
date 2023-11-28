@@ -2,3 +2,4 @@ jupyter
 ipykernel
 mplhep
 uproot
+phasespace
