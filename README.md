@@ -1,4 +1,4 @@
-# `zift` exercises
+# `zfit` exercises
 A repository for collecting fit exercises based on [zfit](https://zfit.readthedocs.io/en/latest/)
 
 ## Content
