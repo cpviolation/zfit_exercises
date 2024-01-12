@@ -3,3 +3,4 @@ ipykernel
 mplhep
 uproot
 phasespace
+zfit-physics
