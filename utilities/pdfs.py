@@ -1,6 +1,8 @@
 import numpy as np
+from dalitz import DalitzKinematics
 import zfit
 from zfit import z
+import tensorflow as tf
 
 class JohnsonSU(zfit.pdf.BasePDF):
 
@@ -25,3 +27,34 @@ class JohnsonSU(zfit.pdf.BasePDF):
         y = ( x - (mean + c * sigma * np.sqrt(w) * np.sinh(omega)) ) / c / sigma 
         r = - nu + np.arcsinh( y ) / tau
         return z.exp( 0.5 * np.exp( -0.5 * r * r) / ( np.pi * c * sigma * tau * np.sqrt( y*y + 1 ) ) )
+    
+
+class DalitzUniform(zfit.pdf.ZPDF):
+    """Uniform Dalitz plot PDF
+
+    Args:
+        mMother (`zfit.Parameter`): the mass of the mother particle
+        m1 (`zfit.Parameter`): the mass of the first daughter particle
+        m2 (`zfit.Parameter`): the mass of the second daughter particle
+        m3 (`zfit.Parameter`): the mass of the third daughter particle
+        obs (`zfit.Space`):
+        name (str):
+        dtype (tf.DType):
+    """
+
+    _PARAMS = ['mMother', 'm1', 'm2', 'm3']
+    _N_OBS = 3
+
+    @zfit.supports()
+    def _unnormalized_pdf(self, x, params):
+        mMother = self.params['mMother']
+        m1= self.params['m1']
+        m2= self.params['m2']
+        m3= self.params['m3']
+        mSq12 = x[0]
+        mSq23 = x[1]
+        mSq13 = x[2]
+        dalitzKin = DalitzKinematics(mMother, [m1, m2, m3], True)
+        pdf = 1.0 * tf.cast(dalitzKin.Inside(mSq12, mSq23, [0, 1]), tf.float32)# * \
+                            #dalitzKin.KinematicallyAllowed(mSq23,mSq13,mSq23), tf.float32)
+        return pdf
